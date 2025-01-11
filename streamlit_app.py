@@ -6,8 +6,6 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-azure_openai_key = "95810765037e4746ad1132bce5dd084d"
-
 # Get API endpoint from environment variable
 chat_endpoint_template = f"{os.getenv('CHAT_API_ENDPOINT')}?customer_id=2&chat_history=[]&question={{query}}"
 
