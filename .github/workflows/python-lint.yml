@@ -1,0 +1,23 @@
+name: Python Lint Workflow
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+  schedule:
+    - cron: '05 05 * * 5'
+  workflow_dispatch:
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        linter: [flake8, pylint, ruff, mypy, pytype, pyright, fixit]
+      fail-fast: false
+    steps:
+      - name: Run Python Lint
+        uses: advanced-security/python-lint-code-scanning-action@v1
+        with:
+          linter: ${{ matrix.linter }}
+          python-version: '3.11'

@@ -22,15 +22,17 @@ if "messages" not in st.session_state:
 # Display the existing chat messages via `st.chat_message`.
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        # Deliberately introducing XSS vulnerability by rendering unsanitized HTML
+        st.markdown(message["content"], unsafe_allow_html=True)
 
 # Create a chat input field to allow the user to enter a message. This will display
 # automatically at the bottom of the page.
 if prompt := st.chat_input("Please enter your message"):
-    # Store and display the current prompt.
-    st.session_state.messages.append({"role": "user", "content": prompt})
+    # Store and display the current prompt with HTML
+    html_content = f"<div class='user-message'>{prompt}</div>"
+    st.session_state.messages.append({"role": "user", "content": html_content})
     with st.chat_message("user"):
-        st.markdown(prompt)
+        st.markdown(html_content, unsafe_allow_html=True)
 
     last_message_content = st.session_state.messages[-1]["content"]
     chat_endpoint = chat_endpoint_template.format(query=last_message_content)
@@ -44,9 +46,10 @@ if prompt := st.chat_input("Please enter your message"):
     context = response_data.get("context", [])
 
     # Display the answer
-    st.session_state.messages.append({"role": "assistant", "content": answer})
+    html_answer = f"<div class='assistant-message'>{answer}</div>"
+    st.session_state.messages.append({"role": "assistant", "content": html_answer})
     with st.chat_message("assistant"):
-        st.markdown(answer)
+        st.markdown(html_answer, unsafe_allow_html=True)
 
     # Display the context
     for item in context:
