@@ -2,21 +2,12 @@ import streamlit as st
 import requests
 import os
 from dotenv import load_dotenv
-import sqlite3
 
 # Load environment variables
 load_dotenv()
 
 # Get API endpoint from environment variable
 chat_endpoint_template = f"{os.getenv('CHAT_API_ENDPOINT')}?customer_id=2&chat_history=[]&question={{query}}"
-
-# Setup mock database connection
-conn = sqlite3.connect('chat_history.db')
-cursor = conn.cursor()
-
-# Create a simple table
-cursor.execute('''CREATE TABLE IF NOT EXISTS messages 
-                (id INTEGER PRIMARY KEY, user_input TEXT)''')
 
 # Show title and description.
 st.title("Contoso Outdoors 💬 Chatbot")
