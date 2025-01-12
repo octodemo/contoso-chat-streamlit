@@ -68,6 +68,11 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_21CDC27EFB5A47D2915A01CEB1561BFF }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CF3D78612EF44DE09A393456284F219B }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4AB2CC5F657945E19AA845FDCE5B3D0F }}
+      
+      - name: Set Web App Settings
+        run: |
+          az webapp config appsettings set -g ${{ vars.AZURE_RESOURCE_GROUP }} -n ${{ vars.AZURE_WEBAPP_NAME }} \
+            --settings CHAT_API_ENDPOINT='${{ secrets.CHAT_API_ENDPOINT }}'
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -75,4 +80,5 @@ jobs:
         with:
           app-name: 'contoso-chat'
           slot-name: 'Production'
+          startup-command: 'python -m streamlit run streamlit_app.py --server.port 8000 --server.address 0.0.0.0'
           
